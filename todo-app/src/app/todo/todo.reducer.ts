@@ -1,5 +1,6 @@
 import * as fromTodo from "./todo.actions";
 import { Todo } from "./model/todo.model";
+import { store, restoreView } from "@angular/core/src/render3";
 
 const todo1 = new Todo("save the world");
 const todo2 = new Todo("sall Xavier and Storm");
@@ -26,6 +27,12 @@ export function todoReducer(
           return todoEdit;
         }
       });
+    case fromTodo.TOGGLE_ALL_TODO:
+      const todos2 = state.map(todoItem => {
+        return { ...todoItem, completed: action.completed };
+      });
+      return todos2;
+
     case fromTodo.CHANGE_TODO_NAME:
       return state.map(todo => {
         if (todo.id === action.id) {
@@ -38,6 +45,9 @@ export function todoReducer(
       });
     case fromTodo.DELETE_TODO:
       return state.filter(todoItem => action.id !== todoItem.id);
+
+    case fromTodo.DELETE_COMPLETED_TODO:
+      return state.filter(todo => !todo.completed);
     default:
       return state;
   }
